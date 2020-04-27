@@ -25,28 +25,28 @@ class Product(models.Model):
     header_background = models.URLField(max_length=1000)
     description       = models.CharField(max_length=500)
     sub_description   = models.CharField(max_length=500)
-    thumnail_url      = models.URLField(max_length=1000)
+    thumbnail_url     = models.URLField(max_length=1000)
 
     class Meta:
         db_table = 'products'
 
 class MiddleImage(models.Model):
-    thumnail_url = models.URLField(max_length=1000)
-    image_url    = models.URLField(max_length=1000)
-    title        = models.CharField(max_length=50)
-    sub_title    = models.CharField(max_length=50)
-    description  = models.CharField(max_length=200)
+    thumbnail_url = models.URLField(max_length=1000)
+    image_url     = models.URLField(max_length=1000)
+    title         = models.CharField(max_length=50)
+    sub_title     = models.CharField(max_length=50)
+    description   = models.CharField(max_length=200)
 
     class Meta:
         db_table = 'middle_images'
 
 class Feature(models.Model):
-    product      = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)
-    title        = models.CharField(max_length=50)
-    sub_title    = models.CharField(max_length=50)
-    description  = models.CharField(max_length=500)
-    thumnail_url = models.URLField(max_length=1000)
-    image_url    = models.URLField(max_length=1000)
+    product       = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)
+    title         = models.CharField(max_length=50)
+    sub_title     = models.CharField(max_length=50)
+    description   = models.CharField(max_length=500)
+    thumbnail_url = models.URLField(max_length=1000)
+    image_url     = models.URLField(max_length=1000)
 
     class Meta:
         db_table = 'features'
@@ -59,19 +59,19 @@ class Detail(models.Model):
     bezel     = models.ForeignKey('Bezel', on_delete=models.SET_NULL, null=True)
     bracelet  = models.ForeignKey('Bracelet', on_delete=models.SET_NULL, null=True)
     dial      = models.ForeignKey('Dial', on_delete=models.SET_NULL, null=True)
-    price     = models.CharField(max_length=50)
+    price     = models.IntegerField()
 
     class Meta:
         db_table = 'details'        
 
 class Size(models.Model):
-    diameter = models.IntegerField(default=0)
+    diameter = models.IntegerField()
 
     class Meta:
         db_table = 'sizes'
 
 class Material(models.Model):
-    name          = models.CharField(max_length=50)
+    name           = models.CharField(max_length=50)
     image_url      = models.URLField(max_length=1000)
     background_url = models.URLField(max_length=1000)
 
