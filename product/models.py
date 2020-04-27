@@ -62,7 +62,7 @@ class Detail(models.Model):
     price     = models.IntegerField()
 
     class Meta:
-        db_table = 'details'        
+        db_table = 'details' 
 
 class Size(models.Model):
     diameter = models.IntegerField()
