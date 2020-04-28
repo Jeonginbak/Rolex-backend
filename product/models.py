@@ -1,4 +1,5 @@
 from django.db import models
+from user.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -16,16 +17,11 @@ class Product(models.Model):
     category          = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
     collection        = models.ForeignKey('Collection', on_delete=models.SET_NULL, null=True)
     middle_image      = models.ForeignKey('MiddleImage', on_delete=models.SET_NULL, null=True)
-    size_detail       = models.ManyToManyField('Size', through='Detail')
-    material_detail   = models.ManyToManyField('Material', through='Detail')
-    bezel_detail      = models.ManyToManyField('Bezel', through='Detail')
-    bracelet_detail   = models.ManyToManyField('Bracelet', through='Detail')
-    dial_detail       = models.ManyToManyField('Dial', through='Detail')
+    detail            = models.ForeignKey('Detail', on_delete=models.SET_NULL, null=True)
     header_watch      = models.URLField(max_length=1000)
     header_background = models.URLField(max_length=1000)
     description       = models.CharField(max_length=500)
     sub_description   = models.CharField(max_length=500)
-    thumbnail_url     = models.URLField(max_length=1000)
 
     class Meta:
         db_table = 'products'
@@ -35,7 +31,7 @@ class MiddleImage(models.Model):
     image_url     = models.URLField(max_length=1000)
     title         = models.CharField(max_length=50)
     sub_title     = models.CharField(max_length=50)
-    description   = models.CharField(max_length=200)
+    description   = models.CharField(max_length=1000)
 
     class Meta:
         db_table = 'middle_images'
@@ -52,17 +48,27 @@ class Feature(models.Model):
         db_table = 'features'
 
 class Detail(models.Model):
-    is_oyster = models.BooleanField()
-    product   = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)
     size      = models.ForeignKey('Size', on_delete=models.SET_NULL, null=True)
     material  = models.ForeignKey('Material', on_delete=models.SET_NULL, null=True)
     bezel     = models.ForeignKey('Bezel', on_delete=models.SET_NULL, null=True)
     bracelet  = models.ForeignKey('Bracelet', on_delete=models.SET_NULL, null=True)
     dial      = models.ForeignKey('Dial', on_delete=models.SET_NULL, null=True)
+    is_oyster = models.BooleanField()
     price     = models.IntegerField()
 
     class Meta:
         db_table = 'details' 
+
+class ConfigureWatch(models.Model):
+    user     = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    size     = models.ForeignKey('Size', on_delete=models.SET_NULL, null=True)
+    material = models.ForeignKey('Material', on_delete=models.SET_NULL, null=True)
+    bezel    = models.ForeignKey('Bezel', on_delete=models.SET_NULL, null=True)
+    bracelet = models.ForeignKey('Bracelet', on_delete=models.SET_NULL, null=True)
+    dial     = models.ForeignKey('Dial', on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        db_table = 'configure_watches'
 
 class Size(models.Model):
     diameter = models.IntegerField()
