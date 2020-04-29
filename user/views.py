@@ -7,7 +7,7 @@ from django.views   import View
 
 from .models        import User, Like
 from .utils         import login_decorator
-from product.models import Product
+from product.models import Product, Detail
 from rolex.settings import SECRET_KEY
 
 
@@ -60,3 +60,28 @@ class LikeView(View):
 			else:		
 				Like.objects.create(product_id=product_id, user_id=user.id)
 		return HttpResponse(status=200)
+
+
+class MyLikeListPreview(View):
+	@login_decorator
+	def get(self, request):
+		user = request.user
+		like_list = Like.objects.filter(user=user.id)
+		data_list = list(like_list)
+
+		for data in data_list:
+			collection = Product.objects.get(id=data.product_id).collection.name
+			image = Product.objects.get(id=data.product_id).header_watch
+			oyster = Detail.objects.get(id=data.product_id).is_oyster
+			size = Detail.objects.get(id=data.product_id).size.diameter
+			material = Detail.objects.get(id=data.product_id).material.name
+		
+		result = {
+			'collection':collection,
+			'image':image,
+			'oyster':oyster,
+			'size':size,
+			'material':material
+		}	
+		
+		return JsonResponse({'product_preview':result}, status=200)
