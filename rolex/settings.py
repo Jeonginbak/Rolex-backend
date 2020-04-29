@@ -26,7 +26,7 @@ SECRET_KEY = config.SECRET['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','10.58.7.47','10.58.7.47:8000']
+ALLOWED_HOSTS = []
 
 
 # Application definition
