@@ -5,7 +5,8 @@ import jwt
 from django.http    import JsonResponse, HttpResponse
 from django.views   import View
 
-from .models        import User
+from .models        import User, Like
+from .utils         import login_decorator
 from product.models import Product
 from rolex.settings import SECRET_KEY
 
@@ -42,3 +43,20 @@ class LogIn(View):
 				return HttpResponse(status=401)
 		except KeyError:
 			return JsonResponse({'message':'invalid'}, status=401)
+
+
+class LikeView(View):
+	@login_decorator
+	def post(self, request, *args, **kwargs):
+		
+		data = json.loads(request.body)
+		if 'product_id' in data:
+			product_id = data['product_id']
+			product = Product.objects.filter(id=product_id)
+			user = request.user
+			
+			if Like.objects.filter(user=user.id, product=product_id).exists():
+				Like.objects.get(user_id=user.id,product_id=product_id).delete()
+			else:		
+				Like.objects.create(product_id=product_id, user_id=user.id)
+		return HttpResponse(status=200)
