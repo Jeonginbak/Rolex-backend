@@ -59,3 +59,4 @@ class ListView(View):
            return JsonResponse({'products': data_attribute}, status = 200)
 
         return JsonResponse({'message':'NO_PRODUCT'}, status = 400)
+      
