@@ -46,17 +46,20 @@ class LogIn(View):
 
 class LikeView(View):
 	@login_decorator
-	def post(self, request, *args, **kwargs):		
+	def post(self, request):		
 		data = json.loads(request.body)
-		if 'product_id' in data:
-			product_id = data['product_id']
-			product = Product.objects.filter(id=product_id)
-			user = request.user
-			if Like.objects.filter(user=user.id, product=product_id).exists():
-				Like.objects.get(user_id=user.id,product_id=product_id).delete()
-			else:		
-				Like.objects.create(product_id=product_id, user_id=user.id)
-		return HttpResponse(status=200)
+		try:
+			if 'product_id' in data:
+				product_id = data['product_id']
+				product = Product.objects.filter(id=product_id)
+				user = request.user
+				if Like.objects.filter(user=user.id, product=product_id).exists():
+					Like.objects.get(user_id=user.id,product_id=product_id).delete()
+				else:		
+					Like.objects.create(product_id=product_id, user_id=user.id)
+			return HttpResponse(status=200)
+		except KeyError:
+			return JsonResponse({'message':'KeyError'}, status=401)
 
 class MyLikeListPreview(View):
 	@login_decorator
