@@ -63,6 +63,7 @@ class MyLikeListPreview(View):
 	def get(self, request):
 		user = request.user
 		like_list = Like.objects.filter(user=user.id)
+		res = []
 		for data in like_list:
 			product = Product.objects.get(id=data.product_id)
 			detail = Detail.objects.get(id=data.product_id)
@@ -75,4 +76,5 @@ class MyLikeListPreview(View):
 				'size':detail.size.diameter,
 				'material':detail.material.name,
 			}
-		return JsonResponse({'product_preview':data_attribute}, status=200)
+			res.append(data_attribute)
+		return JsonResponse({'product_preview':res}, status=200)
