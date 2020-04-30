@@ -43,16 +43,19 @@ class ListView(View):
         if dial_filter == []:
             del(watch_filter['detail__dial__name__in'])
 
-        products = Product.objects.filter(**watch_filter)
-        
-        data_attribute = [
-            {
-            'collection'   : product.collection.name,
-            'oyster'       : product.detail.is_oyster,
-            'size'         : product.detail.size.diameter,
-            'material'     : product.detail.material.name,
-            'image'        : product.header_watch
-        } for product in products[end_page-limit:end_page] 
-        ]
-        
-        return JsonResponse({'products': data_attribute}, status = 200)
+        if Product.objects.filter(**watch_filter):
+           products = Product.objects.filter(**watch_filter)
+    
+           data_attribute = [
+                {
+                'id'           : product.id,
+                'collection'   : product.collection.name,
+                'oyster'       : product.detail.is_oyster,
+                'diameter'     : product.detail.size.diameter,
+                'material'     : product.detail.material.name,
+                'image'        : product.header_watch
+                } for product in products[end_page-limit:end_page] 
+           ]
+           return JsonResponse({'products': data_attribute}, status = 200)
+
+        return JsonResponse({'message':'NO_PRODUCT'}, status = 400)
