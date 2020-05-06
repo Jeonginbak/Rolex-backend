@@ -159,13 +159,15 @@ class ConfigBraceletView(View):
 class ConfigDialView(View):
     def get(self, request):
         size_opt = request.GET.get('size', None)
-        material_opt = request.GET.get('material', None) 
+        material_opt = request.GET.get('material', None)
+        bezel_opt = request.GET.get('bezel', None) 
+        bracelet_opt =request.GET.get('bracelet', '프레지던트') 
         try:
             get_dial = DialFind.objects.filter(size__diameter=size_opt, material__name=material_opt)
             option_list = []
             for d in get_dial:
                 data = {}
-                watch_id = Detail.objects.filter(size__diameter=size_opt, material__name=material_opt, dial__name=d.dial.name).first().id
+                watch_id = Detail.objects.filter(size__diameter=size_opt, material__name=material_opt, bezel__name=bezel_opt, bracelet__name=bracelet_opt, dial__name=d.dial.name).first().id
                 watch_dial_id = Detail.objects.get(id=watch_id).dial_id
                 data = {'name' : Dial.objects.get(id=watch_dial_id).name, 'dial_url' : d.image_url}
                 basic_info(data, watch_id)
