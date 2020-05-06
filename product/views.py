@@ -1,7 +1,6 @@
 import json
 from django.http import JsonResponse, HttpResponse 
 from django.views import View
-from django.db.models import Q 
                 
 from .models import Category, Collection, Product, MiddleImage, Feature, Detail
 from .models import Size, Material, Bezel, Bracelet, Dial
@@ -9,7 +8,8 @@ from .models import BezelFind, BraceletFind, DialFind
 
 class DetailView(View):
 
-    def metadata(self, data, product):
+    def product(self, data, product_id):
+        product  = Product.objects.get(id=product_id)
         data["metadata"] = {
             "category"      : product.category.name,
             "collection"    : product.collection.name,
@@ -20,10 +20,11 @@ class DetailView(View):
             "bg_image"      : product.header_background,
             "price"         : product.detail.price,
             "product_id"    : product.id
-        } 
-        return data
-
-    def main_features(self, data, product):
+        }
+        data["description"] = {
+            "first_paragraph"  : product.description,
+            "second_paragraph" : product.sub_description
+        }
         data["main_features"] = {
             "thumbnail_image"   : product.middle_image.thumbnail_url,
             "click_image"       : product.middle_image.image_url,
@@ -31,161 +32,149 @@ class DetailView(View):
             "sub_title"         : product.middle_image.sub_title,
             "description"       : product.middle_image.description
         }
-        return data
+        return data 
 
-    def sub_features(self, data, features, p_id):   
-        title_list  = []
-        sub_list    = []
-        small_img   = []
-        large_img   = []
-        for num in range(0,len(features)):
-            f = Feature.objects.filter(product_id=p_id)[num]
-            title_list.append(f.title)
-            sub_list.append(f.sub_title)
-            small_img.append(f.thumbnail_url)
-            large_img.append(f.image_url)
-
-        data["sub_features"] = {
-                'title'       : title_list[:len(features)],
-                'sub_title'   : sub_list[:len(features)],
-                'thumbnail'   : small_img[:len(features)],
-                'click_image' : large_img[:len(features)]
-        }
-        return data
+    def sub_features(self, data, feature_list, prd_id):
+        sub_features = Feature.objects.filter(product_id=prd_id)
+        title_list  = [f.title for f in sub_features]
+        sub_list    = [f.sub_title for f in sub_features]
+        small_img   = [f.thumbnail_url for f in sub_features]
+        large_img   = [f.image_url for f in sub_features]
+        description = [f.description for f in sub_features]
+        
+        for item in zip(title_list, sub_list, small_img, large_img, description):
+            data = {
+                'title' : item[0], 'sub_title' : item[1],
+                'small_image' : item[2], 'large_image' : item[3], 'description' : item[4]
+            }
+            feature_list.append(data)
+        return feature_list
 
     def get(self, request, product_id):
-        try:		
+        try:	
             if Product.objects.filter(id=product_id).exists():
-                product  = Product.objects.get(id=product_id)
-                features = Feature.objects.filter(product_id=product_id)
-                data = dict()
-
-                self.metadata(data, product)
-                data["description"] = {
-                    "first_paragraph"  : product.description,
-                    "second_paragraph" : product.sub_description
-                }
-                self.main_features(data, product)
-                self.sub_features(data, features, product)
-
-                return JsonResponse( {'product':data}, status=200 )
+                data = {}
+                feature_list = []
+                self.product(data, product_id)
+                self.sub_features(data,feature_list, product_id)
+                return JsonResponse( {'product':data, 'sub_features':feature_list}, status=200 )
             return JsonResponse({'message': 'PRODUCT_DOES_NOT_EXIST'}, status = 404)
+
         except KeyError:
             return HttpResponse(status=404)
-        except TypeError:
-            return HttpResponse(status=500)
 
 
-class ConfigView(View):
-    def basic_info(self, data, product, watch_id):
-        data['collection']  = product.collection.name
-        data['is_oyster']   = Detail.objects.get(id=watch_id).is_oyster
-        data['diameter']    = Detail.objects.get(id=watch_id).size.diameter
-        data['price']       = Detail.objects.get(id=watch_id).price
-        data['watch_image'] = product.header_watch
-        data['product_id']  = Detail.objects.get(id=watch_id).id
+def basic_info(data, watch_id):
+    product                  = Product.objects.get(id=watch_id)
+    detail                   = Detail.objects.get(id=watch_id)
+    data['collection']       = product.collection.name
+    data['is_oyster']        = detail.is_oyster
+    data['diameter']         = detail.size.diameter
+    data['price']            = detail.price
+    data['watch_image']      = product.header_watch
+    data['background_image'] = product.header_background
+    data['product_id']       = detail.id
 
-    def get(self, request, option=None):
-        size_opt     = request.GET.get('size', None)
-        material_opt = request.GET.get('material', None)
-        bezel_opt    = request.GET.get('bezel', None)
-        bracelet_opt = request.GET.get('bracelet', None)
+def remove_str_diamond(get_material):
+    get_material = [ get_material.remove(m) for m in get_material if '다이아몬드' in m.material.name]
 
-        try:
-            if option == 'model':
-                sizes = [ Product.objects.get(id=1), Product.objects.get(id=105) ]
-                
-                option_list = []
-                for s in sizes:
-                    data = {}
-                    product            = s
-                    watch_id           = s.id
-                    data['background'] = s.header_background
-                    self.basic_info(data, product, watch_id)
-                    option_list.append(data)
-
-                return JsonResponse({'model_data': option_list}, status = 200)
-
-            if option == 'material':
-                get_material = list(BezelFind.objects.filter(size__diameter=size_opt))
-                for m in get_material:
-                    if '다이아몬드' in m.material.name:
-                        get_material.remove(m)
-                for m in get_material:
-                    if '다이아몬드' in m.material.name:
-                        get_material.remove(m)
-
-                option_list = []
-                for g in get_material:
-                    data = {}
-                    data['material_url']  = g.material.image_url
-                    data['material_name'] = g.material.name
-                    watch_id              = Detail.objects.filter(size__diameter=size_opt, material_id=g.material.id).first().id
-                    product               = Product.objects.get(id=watch_id)
-                    self.basic_info(data, product, watch_id)
-                    option_list.append(data)
-                return JsonResponse({'material_data' : option_list}, status = 200)
-
-            if option == 'bezel':
-                if material_opt == '플래티넘':
-                    plus_diamond = material_opt + '과 다이아몬드'
-                    bezel_id = [3,2]
-                else:
-                    plus_diamond = material_opt +'와 다이아몬드'
-                    bezel_id = [1,2]
-
-                basic   = Detail.objects.filter(size__diameter=size_opt, material__name=material_opt)
-                diamond = Detail.objects.filter(size__diameter=size_opt, material__name=plus_diamond)
-
-                option_list = []
-                data = {}
-                watch_id = basic.first().id
-                product = Product.objects.get(id=watch_id)
-                self.basic_info(data, product, watch_id)
-
-                data['bezel_url'] = BezelFind.objects.filter(size__diameter=size_opt, material__name=material_opt, bezel_id=bezel_id[0])[0].image_url
-                option_list.append(data)
-
-                data = {}
-                watch_id = diamond.first().id
-                product = Product.objects.get(id=watch_id)
-                self.basic_info(data, product, watch_id)
-
-                data['bezel_url'] = BezelFind.objects.filter(size__diameter=size_opt, material__name=plus_diamond, bezel_id=bezel_id[1])[0].image_url
-                option_list.append(data)
-
-                return JsonResponse({'bezel_data':option_list}, status = 200)
+class ConfigSizeView(View):
+    def get(self, request):
+        sizes = [ Product.objects.get(id=1), Product.objects.get(id=105) ] # default product
+        option_list = []
+        for size in sizes:
+            data = {}
+            basic_info(data, size.id)
+            option_list.append(data)
+        return JsonResponse({'model_data': option_list}, status = 200)
             
-            if option == 'bracelet':
-                get_bracelet = BraceletFind.objects.filter(size__diameter=size_opt, material__name=material_opt, bezel__name=bezel_opt)
 
-                option_list = []
-                for b in get_bracelet:
-                    data = {}
-                    data['bracelet_url'] = b.image_url
-                    watch_id = Detail.objects.filter(size__diameter=size_opt, material__name=material_opt, bracelet_id=b.bracelet.id).first().id
-                    product = Product.objects.get(id=watch_id)
-                    self.basic_info(data, product, watch_id)
-                    option_list.append(data)
-                return JsonResponse({'bracelet_data' : option_list}, status = 200)
+class ConfigMaterialView(View):
+    def get(self, request):
+        size_opt = request.GET.get('size', None)
+        try:
+            get_material = list(BezelFind.objects.filter(size__diameter=size_opt).order_by('material_id'))
+            remove_str_diamond(get_material)
+            remove_str_diamond(get_material)
 
-            if option == 'dial':
-                get_dial = DialFind.objects.filter(size__diameter=size_opt, material__name=material_opt)
-
-                option_list = []
-                for d in get_dial:
-                    data = {}
-                    data['dial_url'] = d.image_url
-                    watch_id = Detail.objects.filter(size__diameter=size_opt, material__name=material_opt, dial__name=d.dial.name).first().id
-                    product = Product.objects.get(id=watch_id)
-                    self.basic_info(data, product, watch_id)
-                    option_list.append(data)
-                return JsonResponse({'dial_data' : option_list}, status =200)
+            option_list = []
+            for g in get_material:
+                watch_id = Detail.objects.filter(size__diameter=size_opt, material_id=g.material.id).first().id
+                data  = {'name' : g.material.name, 'material_url' : g.material.image_url}
+                basic_info(data, watch_id)
+                option_list.append(data)
+            return JsonResponse({'material_data' : option_list}, status = 200)
 
         except KeyError:
             return HttpResponse(status=404)
-        except TypeError:
-            return HttpResponse(status=500)
+
+
+class ConfigBezelView(View):
+    def get(self, request):
+        size_opt = request.GET.get('size', None)
+        material_opt = request.GET.get('material', None)
+        try:
+            if material_opt == '플래티넘':
+                plus_diamond = material_opt + '과 다이아몬드'
+            else:
+                plus_diamond = material_opt +'와 다이아몬드'
+
+            get_bezel = BezelFind.objects.filter(size__diameter=size_opt, material__name=material_opt) | BezelFind.objects.filter(size__diameter=size_opt, material__name=plus_diamond)
+
+            option_list = []
+            for b in get_bezel:
+                data      = {}
+                data      = {'name' : Bezel.objects.get(id=b.bezel_id).name, 'bezel_url' : b.image_url}
+                watch_id  = Detail.objects.filter(size__diameter=size_opt, material_id=b.material.id, bezel_id=b.bezel.id).first().id
+                basic_info(data, watch_id)
+                option_list.append(data)
+            return JsonResponse({'bezel_data':option_list}, status = 200)
+
+        except KeyError:
+            return HttpResponse(status=404)
+
+
+class ConfigBraceletView(View):
+    def get(self, request):
+        size_opt = request.GET.get('size', None)
+        material_opt = request.GET.get('material', None)
+        bezel_opt = request.GET.get('bezel', None)
+        try:
+            plus_diamond = material_opt + '와 다이아몬드'
+            get_bracelet = BraceletFind.objects.filter(size__diameter=size_opt, material__name=material_opt, bezel__name=bezel_opt) | BraceletFind.objects.filter(size__diameter=size_opt, material__name=plus_diamond, bezel__name=bezel_opt) 
+
+            option_list = []
+            for b in get_bracelet:
+                data = {}
+                data = {'name' : Bracelet.objects.get(id=b.bracelet.id).name, 'bracelet_url' : b.image_url}
+                watch_id = Detail.objects.filter(size__diameter=size_opt, material_id=b.material.id, bezel__name=bezel_opt, bracelet_id=b.bracelet.id).first().id
+                basic_info(data, watch_id)
+                option_list.append(data)
+            return JsonResponse({'bracelet_data' : option_list}, status = 200)
+
+        except KeyError:
+            return HttpResponse(status=404)
+
+
+class ConfigDialView(View):
+    def get(self, request):
+        size_opt = request.GET.get('size', None)
+        material_opt = request.GET.get('material', None) 
+        try:
+            get_dial = DialFind.objects.filter(size__diameter=size_opt, material__name=material_opt)
+            option_list = []
+            for d in get_dial:
+                data = {}
+                watch_id = Detail.objects.filter(size__diameter=size_opt, material__name=material_opt, dial__name=d.dial.name).first().id
+                watch_dial_id = Detail.objects.get(id=watch_id).dial_id
+                data = {'name' : Dial.objects.get(id=watch_dial_id).name, 'dial_url' : d.image_url}
+                basic_info(data, watch_id)
+                option_list.append(data)
+            return JsonResponse({'dial_data' : option_list}, status =200)
+
+        except KeyError:
+            return HttpResponse(status=404)
+
 
 class ListView(View):
     def get(self, request):
@@ -240,5 +229,3 @@ class ListView(View):
            return JsonResponse({'products': data_attribute}, status = 200)
 
         return JsonResponse({'message':'NO_PRODUCT'}, status = 400)
-
-
