@@ -28,7 +28,7 @@
 - Gunicorn
 
 ## DB Modeling
-!(https://images.velog.io/images/jeongin/post/cf2bd4f6-d9f9-4ede-850c-e88c4bfd5127/image.png)
+![](https://images.velog.io/images/jeongin/post/42270f13-dc2a-4989-bea1-974b82cabb0b/image.png)
 
 ## 구현 기능
 
