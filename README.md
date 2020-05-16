@@ -6,7 +6,7 @@
 
 ## 개발 인원 및  기간
 
-- 기간 : 10일
+- 기간 : 10일(4월 23일 ~ 5월 1일)
 - 인원 : 프론트엔드 3명, 벡엔드 3명
 - [프론트엔드 GitHub](https://github.com/wecode-bootcamp-korea/Rolex-frontend)
 
