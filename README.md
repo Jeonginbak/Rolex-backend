@@ -13,14 +13,14 @@
 <br>
 
 ## 데모 영상 
-링크: https://youtu.be/x_35Mi3LWTY
+https://youtu.be/x_35Mi3LWTY
 [![Video Label](https://i9.ytimg.com/vi/x_35Mi3LWTY/maxresdefault.jpg?time=1592667196038&sqp=CPjWuPcF&rs=AOn4CLBNZEveqgN9mVF0Cp152u1uTbWTrQ)](https://youtu.be/x_35Mi3LWTY)
 
 <br>
 
 ## 목적
-- 웹페이지의 구조를 파악하여 modeling 구현
-- modeling을 통해 model 및 view 코딩
+- 웹페이지의 구조를 파악하여 모델링
+- 모델링을 기반으로 API 생성(model, view, url 작성)
 - 팀프로젝트를 통한 프론트엔드와 백엔드간의 의사소통
 
 <br>
@@ -56,12 +56,12 @@
 
 
 #### Product
-- DAY-DATE 제품 list 페이지네이션
-- DAY-DATE 제품 옵션에 따른 중복 필터링 구현
-- 필러링한 옵션에 해당하는 제품이 없을 때 400에러 보내주기
-- DAY-DATE의 모든 제품에 따른 조합에 따른 상세 정보(가격, 설정 조합, 설명글 및 이미지)를 보여주는 페이지 구현
-- DAY-DATE 제품 단계별 옵션에 따른 시계 조합 보여주기 기능 구현
-- 각 단계별 조합에 따른 제품 상세페이지 이동 구현
+- DAY-DATE 제품 [시계 골라보기](https://www.rolex.com/ko/watches/find-rolex.html#p=1) List Pagination 
+- DAY-DATE 제품 옵션에 따른 중복 필터링 구현 (제품이 없을 시 400 error)
+- 시계 이미지 좌측 상단의 하트 클릭 시 나의 셀렉션에서 시계 확인 기능 구현
+- 제품 클릭 시 상세 페이지(가격, 설정 조합, 설명글 및 이미지) 라우팅
+- DAY-DATE 제품 [시계 설정하기](https://www.rolex.com/ko/watches/configure.html#/day-date/m228238-0042/model): 쿼리스트링으로 단계별 옵션 저장하여 시계 조합 보여주기 기능 구현
+- 시계 설정하기의 모든 시계 클릭 시 상세 페이지로 이동할 수 있도록 라우팅 
 - 각 단계별 조합 페이지에서 이전 단계로 돌아갔을 때 선택 조합 저장하는 기능 구현
 
 
