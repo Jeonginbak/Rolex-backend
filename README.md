@@ -4,6 +4,10 @@
 
 <br>
 
+## 데모 영상 
+https://www.youtube.com/watch?v=x_35Mi3LWTY&feature=youtu.be
+
+
 ## 개발 인원 및  기간
 
 - 기간 : 10일(4월 23일 ~ 5월 1일)
