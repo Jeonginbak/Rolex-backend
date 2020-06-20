@@ -4,15 +4,17 @@
 
 <br>
 
-## 데모 영상 
-https://www.youtube.com/watch?v=x_35Mi3LWTY&feature=youtu.be
-
-
 ## 개발 인원 및  기간
 
 - 기간 : 10일(4월 23일 ~ 5월 1일)
-- 인원 : 프론트엔드 3명, 벡엔드 3명
+- 인원 : 백엔드 [Yeeunlee](https://github.com/yenilee), [Jeonginbak](https://github.com/Jeonginbak), [pyheejin](https://github.com/pyheejin)
 - [프론트엔드 GitHub](https://github.com/wecode-bootcamp-korea/Rolex-frontend)
+
+<br>
+
+## 데모 영상 
+링크: https://youtu.be/x_35Mi3LWTY
+[![Video Label](https://i9.ytimg.com/vi/x_35Mi3LWTY/maxresdefault.jpg?time=1592667196038&sqp=CPjWuPcF&rs=AOn4CLBNZEveqgN9mVF0Cp152u1uTbWTrQ)](https://youtu.be/x_35Mi3LWTY)
 
 <br>
 
