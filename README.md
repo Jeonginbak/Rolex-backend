@@ -7,8 +7,8 @@
 ## 개발 인원 및  기간
 
 - 기간 : 10일(4월 23일 ~ 5월 1일)
-- 인원 : 백엔드 [Yeeunlee](https://github.com/yenilee), [Jeonginbak](https://github.com/Jeonginbak), [pyheejin](https://github.com/pyheejin)
-- [프론트엔드 GitHub](https://github.com/wecode-bootcamp-korea/Rolex-frontend)
+- Back-end members : [Yeeunlee](https://github.com/yenilee), [Jeonginbak](https://github.com/Jeonginbak), [pyheejin](https://github.com/pyheejin)
+- [Front-end GitHub](https://github.com/wecode-bootcamp-korea/Rolex-frontend)
 
 <br>
 
