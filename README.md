@@ -13,7 +13,7 @@
 <br>
 
 ## 데모 영상 
-[![Video Label](https://images.velog.io/images/jeongin/post/a3962ebd-abc1-48ca-8e2b-30bea39296da/image.png)](https://youtu.be/x_35Mi3LWTY)
+[![Video Label](https://images.velog.io/images/jeongin/post/ccc87f10-f079-4c6c-8eeb-8f6d9a5bef11/image.png)](https://youtu.be/x_35Mi3LWTY)
 
 <br>
 
