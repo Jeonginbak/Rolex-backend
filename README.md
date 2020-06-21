@@ -14,7 +14,7 @@
 
 ## 데모 영상 
 https://youtu.be/x_35Mi3LWTY
-[![Video Label](https://i9.ytimg.com/vi/x_35Mi3LWTY/maxresdefault.jpg?time=1592667196038&sqp=CPjWuPcF&rs=AOn4CLBNZEveqgN9mVF0Cp152u1uTbWTrQ)](https://youtu.be/x_35Mi3LWTY)
+[![Video Label](http://thumb1.photo.cloud.naver.com/3472428824864777005?type=m3&setidc=2&filelink=CVUr0j+NNBsJhQFIBHM0t6TZ9NkvivuP4q6x8ZphYyWRtnnvrfGsEH8Izx+J8OKVWjlH1QXI9cH7w2eBKfeoZwc=&authtoken=U5Q3ZGhPLsAKXewz//gpuAI=)](https://youtu.be/x_35Mi3LWTY)
 
 <br>
 
