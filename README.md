@@ -13,7 +13,7 @@
 <br>
 
 ## 데모 영상 
-[![Video Label](http://thumb1.photo.cloud.naver.com/3472428824864777005?type=m3&setidc=2&filelink=CVUr0j+NNBsJhQFIBHM0t6TZ9NkvivuP4q6x8ZphYyWRtnnvrfGsEH8Izx+J8OKVWjlH1QXI9cH7w2eBKfeoZwc=&authtoken=U5Q3ZGhPLsAKXewz//gpuAI=)](https://youtu.be/x_35Mi3LWTY)
+[![Video Label](https://images.velog.io/images/jeongin/post/a3962ebd-abc1-48ca-8e2b-30bea39296da/image.png)](https://youtu.be/x_35Mi3LWTY)
 
 <br>
 
